@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * @author <a href="http://escoffier.me">Clement Escoffier</a>
  */
 public class AchievementBackend {
+  private final static Logger LOGGER = Logger.getLogger(AchievementBackend.class.getName());
 
   private static final List<AchievementType> ACHIEVEMENT_TYPES;
 
@@ -37,9 +40,13 @@ public class AchievementBackend {
    */
   public List<Achievement> achievements(final String uuid) {
     Map<String, Achievement> current = USER_ACHIEVEMENTS.get(uuid);
+    
     if (current == null) {
-      current = addNewAchievements(uuid);
+      LOGGER.info(uuid + " has no achievements");
+      // current = addNewAchievements(uuid);
+      return new ArrayList<>();
     }
+     
     return new ArrayList<>(current.values());
   }
 
@@ -50,7 +57,7 @@ public class AchievementBackend {
    * @return The current value of the achievement or null if it doesn't exist
    */
   public Achievement updateAchievement(String uuid, String achievementType) {
-    System.out.println("Update achievements: " + uuid + " / " + achievementType);
+    LOGGER.info("Update achievements: " + uuid + " / " + achievementType);
     Map<String, Achievement> current = USER_ACHIEVEMENTS.get(uuid);
     if (current == null) {
       current = addNewAchievements(uuid);
@@ -84,13 +91,21 @@ public class AchievementBackend {
 
   static {
     final List<AchievementType> achievementTypes = new ArrayList<>();
-
+    /*
     addAchievementType(achievementTypes, "TEN_CONSEQ", "10 consecutive points");
     addAchievementType(achievementTypes, "FIFTY_CONSEQ", "50 consecutive points");
     addAchievementType(achievementTypes, "100_POINTS", "100 points");
     addAchievementType(achievementTypes, "500_POINTS", "500 points");
     addAchievementType(achievementTypes, "TOP_SCORER", "Top scorer");
-
+    */
+    addAchievementType(achievementTypes, "pops3", "3 in a row");
+    addAchievementType(achievementTypes, "pops1", "10 in a row");
+    addAchievementType(achievementTypes, "pops2", "15 in a row");
+    addAchievementType(achievementTypes, "score1", "10 points");
+    addAchievementType(achievementTypes, "score3", "100 points");
+    addAchievementType(achievementTypes, "score2", "300 points");
+    addAchievementType(achievementTypes, "golden", "Golden Snitch");
+    
     ACHIEVEMENT_TYPES = achievementTypes;
   }
 }
